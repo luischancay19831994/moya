@@ -1,0 +1,883 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+
+{% block title %} Modelo Linea de espera{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
+
+    <!--Bootstrap -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"
+          type="text/css">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+
+        body {
+            font-family: montserrat, arial, verdana,sans-serif,"Century Schoolbook L";
+
+        }
+    </style>
+
+{% endblock %}
+
+{% block header %}
+
+
+    <div id="container body-content">
+
+    <h1 align="center">DISTRIBUIDORA "LAS NENAS"</h1>
+
+        <form class="form-horizontal" id="formulario" method="post">
+
+
+            {% csrf_token %}
+
+            <span class="input-group-addon">Tiempo de llegadas</span>
+            <input required type="number" class="form-control input-lg" id="inputGroupSuccess1"
+                   aria-describedby="inputGroupSuccess1Status" name="nLlegadas"
+                   placeholder="¿Cuantos Datos va a ingresar?">
+            <span class="input-group-addon">Tiempo de servicio</span>
+            <input required type="number" class="form-control input-lg" id="inputGroupSuccess1"
+                   aria-describedby="inputGroupSuccess1Status" name="nServicio"
+                   placeholder="¿Cuantos Datos va a ingresar?">
+
+            <select hidden name="metodo">
+                <option selected value="numeros">Numeros</option>
+            </select>
+            <button class="btn btn-large btn-default" style="border-color: black"
+                    type="submit" value="Continuar">Continuar <spam class="glyphicon glyphicon-send"></spam></button>
+        </form>
+        {% if numeLlegadas > 0 and numeServicio > 0 %}
+            <div class="panel">
+
+                <div align="center" class="panel-heading">
+                    <h3>FORMULARIO</h3>
+                </div>
+                <div class="panel-body">
+                    <form class="form-horizontal msf" method="post">
+                        {% csrf_token %}
+
+                        <div class="msf-content">
+                            <div class="msf-view">
+
+                                <div class="row">
+                                    <div class="col-md-6 col-md-offset-3">
+                                        <div class="form-group">
+
+
+                                            <table class="table table-bordered table-striped table-hover"
+                                                   style="width:100%">
+                                                <tr>
+                                                    <th>
+                                                        Tiempo entre Llegadas
+
+                                                    </th>
+                                                    <th>
+                                                        Tiempo de Servicio
+                                                    </th>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>
+                                                        <ul>
+                                                            {% for num  in numeLlegadas %}
+
+
+                                                                <input id="vLlegadas{{ num }}" type="number" step="0.01"
+                                                                       class="form-control input-lg"
+                                                                       aria-describedby="inputGroupSuccess1Status"
+                                                                       name="valorLlegadas"
+                                                                       placeholder="Llegadas {{ num }}"
+                                                                       data-val="true"
+                                                                       data-val-required="vLlegadas{{ num }} is required">
+
+                                                            {% endfor %}
+                                                        </ul>
+                                                    </td>
+                                                    <td>
+                                                        {% for num in numeServicio %}
+
+                                                            <input required type="number" step="0.01"
+                                                                   class="form-control input-lg"
+                                                                   id="vServicio{{ num }}"
+                                                                   aria-describedby="inputGroupSuccess5Status"
+                                                                   name="valorServicio"
+                                                                   placeholder="Servicio {{ num }}"
+                                                                   data-val="true"
+                                                                   onchange="addNumeros()"
+                                                                   data-val-required="vServicio{{ num }} is required">
+                                                        {% endfor %}
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </div>
+                                        <div class="form-group">
+                                        </div>
+                                        <div class="form-group">
+                                            <input hidden value="{{ nume }}" type="number" name="no"
+                                                   placeholder="{{ nume }}">
+
+
+                                            <select hidden name="metodo">
+                                                <option value="valor_x">Valores de x</option>
+                                                <option selected value="inventario">Inventario</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="msf-view">
+                                <div class="row">
+                                    <div class="col-md-6 col-md-offset-3">
+                                        <div class="contenedor">
+
+                                            <div class="contenido">
+
+                                                <div class="form-group">
+                                                    <div class="alert alert-warning" role="alert">
+                                                        <strong>Info:</strong> Seleccionar Método para Tiempo entre
+                                                        Llegadas
+                                                    </div>
+                                                    <select id="metodoa" onChange="mostrar(this.value)"
+                                                            class="form-control input-lg"
+                                                            name="metodoa" class="form-control"
+                                                            data-bind="options: availablemetodoa, selectedOptions: chosenmetodoa, optionsCaption: 'Seleccione un método'"
+                                                            data-val="true"
+                                                            data-val-required="Request metodoa is required.">
+                                                    </select>
+                                                </div>
+                                                <div class="card text-center">
+                                                    <div class="card-header">
+                                                        <label>Método</label> : <span
+                                                            data-bind="text: chosenmetodoa"></span>
+
+                                                    </div>
+                                                    <div class="card-body">
+
+                                                        <div class="form-group">
+                                                            <div id="Multiplicativo" class="form-group has-feedback">
+                                                                <div class="card-header">
+                                                                    <div class="alert alert-info" role="alert">
+                                                                        <strong>Info:</strong> El número de eventos será
+                                                                        la
+                                                                        misma cantidad de los números aleatorios (N)
+                                                                    </div>
+                                                                </div>
+                                                                <label class="control-label" for="inputGroupSuccess1">Ingrese
+                                                                    datos:</label>
+
+                                                                <div class="input-group">
+
+                                                                    <span class="input-group-addon">N</span>
+                                                                    <input onchange="valuechange()"
+                                                                           oninput="valuechange()" required id="n"
+                                                                           type="number"
+                                                                           class="form-control input-lg"
+                                                                           name="n" placeholder="Cantidad a Generar"
+                                                                           data-bind="value: n"
+                                                                           data-val="true"
+                                                                           data-val-required="Request n is required.">
+                                                                </div>
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">A</span>
+                                                                    <input required id="a" required type="number"
+                                                                           class="form-control input-lg"
+                                                                           aria-describedby="inputGroupSuccess2Status"
+                                                                           name="a"
+                                                                           placeholder="Constante Multiplicativa"
+                                                                           data-bind="value: a"
+                                                                           data-val="true"
+                                                                           data-val-required="Request a is required.">
+                                                                </div>
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">Xo</span>
+                                                                    <input id="xo" required type="number"
+                                                                           class="form-control input-lg"
+                                                                           id="inputGroupSuccess3"
+                                                                           aria-describedby="inputGroupSuccess3Status"
+                                                                           name="xo"
+                                                                           placeholder="Semilla Inicial"
+                                                                           data-bind="value: xo"
+                                                                           data-val="true"
+                                                                           data-val-required="Request xo is required.">
+                                                                </div>
+                                                                <div id="divc" class="input-group">
+                                                                    <span class="input-group-addon">C</span>
+                                                                    <input id="c" required type="number"
+                                                                           class="form-control input-lg"
+                                                                           id="inputGroupSuccess4"
+                                                                           aria-describedby="inputGroupSuccess4Status"
+                                                                           name="c"
+                                                                           placeholder="Constante Aditiva"
+                                                                           data-bind="value: c"
+                                                                           data-val="true"
+                                                                           data-val-required="Request c is required.">
+                                                                </div>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">M</span>
+                                                                    <input id="m" required type="number"
+                                                                           class="form-control input-lg"
+                                                                           id="inputGroupSuccess5"
+                                                                           aria-describedby="inputGroupSuccess5Status"
+                                                                           name="m"
+                                                                           placeholder="Modulo"
+                                                                           data-bind="value: m"
+                                                                           data-val="true"
+                                                                           data-val-required="Request m is required.">
+                                                                </div>
+                                                            </div>
+
+                                                            <div id="Manual" class="input-group">
+                                                                <div class="alert alert-info" role="alert">
+                                                                    <strong>Info:</strong> El número de eventos será la
+                                                                    misma cantidad de los números aleatorios
+                                                                </div>
+                                                                <input placeholder="Ingrese La Cantidad"
+                                                                       oninput="addNumeros()"
+                                                                       onloadstart="addNumeros()"
+                                                                       onload="addNumeros()" value="5"
+                                                                       required type="number" id="cnumeros"
+                                                                       name="cnumeros"
+                                                                       class="form-control input-lg">
+                                                                <div class="contenedor">
+                                                                    <div class="contenido" id="nriLlegadas">
+
+                                                                    </div>
+                                                                    <div class="contenido" id="nriServicio">
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="contenido" id="simanual">
+
+                                                <div class="form-group">
+
+
+                                                    <div class="card text-center">
+                                                        <div class="card-header">
+                                                            <div class="alert alert-warning" role="alert">
+
+                                                                <strong>Método</strong> : <span
+                                                                    data-bind="text: chosenmetodoa"></span>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+
+                                                        <div class="form-group">
+                                                            <div id="Multiplicativob" class="form-group has-feedback">
+
+                                                                <label class="control-label" for="inputGroupSuccess1">Ingrese
+                                                                    datos:</label>
+
+
+                                                                <div class="input-group">
+                                                                    <input style="visibility:hidden" required id="nb"
+                                                                           type="number"
+                                                                           class="form-control input-lg"
+                                                                           name="nb" placeholder="Cantidad a Generar"
+                                                                           data-bind="value: nb"
+                                                                           data-val="true"
+                                                                           data-val-required="Request nb is required.">
+                                                                </div>
+                                                                <div class="input-group">
+
+                                                                    <span class="input-group-addon glyphicon glyphicon-lock">N: </span>
+                                                                    <input
+                                                                            class="form-control input-lg"
+                                                                            disabled
+                                                                            id="NR">
+                                                                </div>
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">A</span>
+                                                                    <input required id="ab" type="number"
+                                                                           class="form-control input-lg"
+                                                                           name="ab"
+                                                                           placeholder="Constante Multiplicativa"
+                                                                           data-bind="value: ab"
+                                                                           data-val="true"
+                                                                           data-val-required="Request ab is required.">
+                                                                </div>
+
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">Xo</span>
+                                                                    <input id="xob" required type="number"
+                                                                           class="form-control input-lg"
+                                                                           aria-describedby="inputGroupSuccess3Status"
+                                                                           name="xob"
+                                                                           placeholder="Semilla Inicial"
+                                                                           data-bind="value: xob"
+                                                                           data-val="true"
+                                                                           data-val-required="Request xob is required.">
+                                                                </div>
+                                                                <div id="divcb" class="input-group">
+                                                                    <span class="input-group-addon">C</span>
+                                                                    <input id="cb" required type="number"
+                                                                           class="form-control input-lg"
+                                                                           aria-describedby="inputGroupSuccess4Status"
+                                                                           name="cb"
+                                                                           placeholder="Constante Aditiva"
+                                                                           data-bind="value: cb"
+                                                                           data-val="true"
+                                                                           data-val-required="Request cb is required.">
+                                                                </div>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon">M</span>
+                                                                    <input id="mb" required type="number"
+                                                                           class="form-control input-lg"
+                                                                           aria-describedby="inputGroupSuccess5Status"
+                                                                           name="mb"
+                                                                           placeholder="Modulo"
+                                                                           data-bind="value: mb"
+                                                                           data-val="true"
+                                                                           data-val-required="Request mb is required.">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="msf-navigation">
+                            <div class="row">
+
+
+                                <div class="col-md-3 col-md-offset-6">
+                                    <button type="submit" data-type="submit" class="btn btn-lg btn-default"
+                                            style="border-color: black"> Aceptar
+                                        <spam class="glyphicon glyphicon-search"></spam>
+                                    </button>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            </div>
+        {% endif %}
+
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-8 col-sm-6">
+            <div id="Llegadas" class="panel panel-danger">
+                <div class="panel-heading">
+                    <spam class="glyphicon glyphicon-user"> </spam> Tabla de Datos Tiempo entre Llegadas
+                </div>
+                <div class="panel-body">
+                    <div class="contenedor">
+
+                        <div class="contenido">
+                            <table width="50%" class="table table-bordered table-striped table-hover table-danger">
+                                <tr class="warning">
+                                    <th>#</th>
+                                    <th>Probabilidad</th>
+                                    <th>Frecuencia Acumulada</th>
+
+                                </tr>
+                                {% for datos  in datosLlegadas %}
+                                    <tr>
+                                        <td > {{ datos.0 }} </td>
+                                        <td>  {{ datos.1 }}</td>
+                                        <td>  {{ datos.2 }}</td>
+
+
+                                    </tr>
+
+                                {% endfor %}
+
+
+                            </table>
+                        </div>
+
+                        <div class="contenido">
+                            <table width="25%" class="table table-bordered table-striped table-hover table-responsive">
+
+                                <th>Menor</th>
+                                {% for datos  in desdeLlegadas %}
+                                    <tr>
+                                        <td> {{ datos }} </td>
+                                    </tr>
+                                {% endfor %}
+
+                            </table>
+
+                        </div>
+
+                        <div class="contenido">
+                            <table width="25%" class="table table-bordered table-striped table-hover table-responsive">
+
+                                <th>Mayor</th>
+                                {% for datos  in frecaLlegadas %}
+                                    <tr>
+                                        <td> {{ datos }} </td>
+                                    </tr>
+                                {% endfor %}
+
+                            </table>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-8 col-sm-6">
+            <div id="Servicio" class="panel panel-danger">
+                <div class="panel-heading">
+                    <spam class="glyphicon glyphicon-user"> </spam> Tabla de Datos Tiempo de Servicio
+                </div>
+                <div class="panel-body">
+                    <div class="contenido">
+                        <table width="50%" class="table table-bordered table-striped table-hover table-responsive">
+
+                            <tr class="warning">
+                                <th>#</th>
+                                <th>Probabilidad</th>
+                                <th>Frecuencia Acumulada</th>
+
+                            </tr>
+                            {% for datos  in datosServicio %}
+                                <tr>
+                                    <td> {{ datos.0 }} </td>
+                                    <td>  {{ datos.1 }}</td>
+                                    <td>  {{ datos.2 }}</td>
+
+                                </tr>
+
+                            {% endfor %}
+
+
+                        </table>
+                    </div>
+
+                    <div class="contenido">
+                        <table width="100%" class="table table-bordered table-striped table-hover table-responsive">
+
+                            <th>Menor</th>
+                            {% for datos  in desdeServicio %}
+                                <tr>
+                                    <td> {{ datos }} </td>
+                                </tr>
+                            {% endfor %}
+
+                        </table>
+
+                    </div>
+                    <div class="contenido">
+                        <table width="100%" class="table table-bordered table-striped table-hover table-responsive">
+
+                            <th>Mayor</th>
+                            {% for datos  in frecaServicio %}
+                                <tr>
+                                    <td> {{ datos }} </td>
+                                </tr>
+                            {% endfor %}
+
+                        </table>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <div class="panel-body">
+        <div class="col-xs-27 col-sm-22">
+            <div class="col-xs-3">
+                <table class="table table-bordered table-striped table-hover" style="width:100%">
+                    <td></td>
+                    <td colspan="2" align="center">Llegadas</td>
+                    <tr class="warning">
+                        <th>N° de evento</th>
+                        <th> Aleatorio</th>
+                        <th>Tiempo de llegada</th>
+                    </tr>
+
+                    {% for datos  in mresultadoLlegadas %}
+                        <tr>
+                            <td> {{ datos.0 }} </td>
+                            <td>  {{ datos.1 }}</td>
+                            <td>  {{ datos.2 }}</td>
+
+
+                        </tr>
+                    {% endfor %}
+
+                </table>
+            </div>
+            <div class="col-xs-3">
+
+
+                <table class="table table-bordered table-striped table-hover" style="width:100%">
+                    <td colspan="2" align="center"> Servicio</td>
+
+                    <tr class="warning">
+
+                        <th> Aleatorio </th>
+                        <th>Tiempo de Servicio</th>
+                    </tr>
+
+                    {% for datos  in mresultadoServicio %}
+                        <tr>
+                            <td> {{ datos.0 }} </td>
+                            <td>  {{ datos.1 }}</td>
+
+
+                        </tr>
+                    {% endfor %}
+
+                </table>
+            </div>
+            <div class="col-xs-5">
+                <table class="table table-bordered table-striped table-hover" style="width:100%">
+
+                    <td colspan="3" align="center">Hora</td>
+                    <td colspan="2" align="center">Tiempo</td>
+
+                    <tr class="info">
+                        <th>llegada Exacta</th>
+                        <th>Iniciacion Servicio</th>
+                        <th>Terminacion Servicio</th>
+                        <th>Espera</th>
+                        <th>En el Sistema</th>
+
+                    </tr>
+
+                    {% for datos  in mLlegadaExacta %}
+                        <tr>
+                            <td> {{ datos.0 }} </td>
+                            <td>  {{ datos.1 }}</td>
+                            <td>  {{ datos.2 }}</td>
+                            <td>  {{ datos.3 }}</td>
+                            <td>  {{ datos.4 }}</td>
+
+
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <th>Total:</th>
+                        <th>{{ sumtEspera }}</th>
+                        <th>{{ sumtSistema }}</th>
+                    </tr>
+                    <tr class="error">
+                        <td></td>
+                        <td></td>
+                        <th>Promedio:</th>
+                        <th>{{ promtEspera }}</th>
+                        <th>{{ promtSistema }}</th>
+                    </tr>
+                </table>
+            </div>
+
+
+        </div>
+
+    </div>
+    <div class="alert alert-info" role="alert"><span class="glyphicon-glyphicon-ok"></span>
+        <strong>Informacion:</strong>
+            El promedio de tiempo de espera es {{ promtEspera }} para la cola de la distribuidora "las nenas"
+    </div>
+    <div class="alert alert-success" role="alert"><span class="glyphicon-glyphicon-ok"></span>
+        <strong>Informacion:</strong>
+            El total de tiempo de espera es {{ sumtEspera }} para la cola de la distribuidora "las nenas"
+    </div>
+    <div class="alert alert-warning" role="alert">
+        <strong>Informacion:</strong>
+            El total de tiempo en el sistema es {{ sumtEspera }} para la distribuidora "las nenas"
+    </div><span class="glyphicon-glyphicon-ok"></span>
+
+
+{% endblock %}
+{% block js %}
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
+
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <script src="{% static 'js/multi-step-form.js' %}"></script>
+
+
+    <script type="text/javascript">
+
+        var trace1 = {
+            x: {{ mcum }},
+            y: {{ mcum }},
+            mode: 'markers+text',
+            type: 'scatter',
+            name: 'Team A',
+            text: {{ mcum }},
+            textposition: 'top center',
+            textfont: {
+                family: 'Raleway, sans-serif'
+            },
+            marker: {
+                size: 25, color: 'rgb(234, 153, 153)',
+            }
+        };
+
+        var data = [trace1];
+
+        var layout = {
+            xaxis: {
+                range: [0, 999]
+            },
+            yaxis: {
+                range: [0, 999]
+            },
+            legend: {
+                y: 0.5,
+                yref: 'paper',
+                font: {
+                    family: 'Arial, sans-serif',
+                    size: 20,
+                    color: 'rgb(234, 153, 153)',
+                }
+            },
+            title: 'Gráfico Método Cuadrado Medio'
+        };
+
+        Plotly.newPlot('ultimo', data, layout);
+    </script>
+
+
+    <script type="text/javascript">
+
+
+        function ViewModel() {
+            var self = this;
+
+
+            self.AdditionalDetails = ko.observable('');
+            self.availablemetodoa = ko.observableArray(['Lineal', 'Multiplicativo', 'Manual']);
+            self.availablemetodob = ko.observableArray(['Linealb', 'Multiplicativob']);
+            self.chosenmetodoa = ko.observable('');
+            self.chosenmetodob = ko.observable('');
+
+
+        }
+
+        var viewModel = new ViewModel();
+
+        ko.applyBindings(viewModel);
+
+        $(document).on("msf:viewChanged", function (event, data) {
+
+            var progress = Math.round((data.currentIndex / data.totalSteps) * 100);
+
+            $(".progress-bar").css("width", progress + "%").attr('aria-valuenow', progress);
+            ;
+        });
+
+
+        $(".msf:first").multiStepForm();
+
+
+        function addNumeros() {
+            // Number of inputs to create
+            var number = document.getElementById("cnumeros").value;
+
+
+            // Container <div> where dynamic content will be placed
+            var containerLlegadas = document.getElementById("nriLlegadas");
+            var containerServicio = document.getElementById("nriServicio");
+            // Clear previous contents of the container
+            while (containerLlegadas.hasChildNodes()) {
+                containerLlegadas.removeChild(containerLlegadas.lastChild);
+            }
+            for (i = 0; i < number; i++) {
+                // Append a node with a random text
+                containerLlegadas.appendChild(document.createTextNode("Aleatorio " + (i + 1)));
+                // Create an <input> element, set its type and name attributes
+                var inputLlegadas = document.createElement("input");
+                inputLlegadas.type = "number";
+                inputLlegadas.step = "0.001";
+                inputLlegadas.className = "form-control input-lg";
+                inputLlegadas.name = "riLlegadas";
+                inputLlegadas.min = "0";
+                inputLlegadas.max = "1";
+                inputLlegadas.required = "true";
+                containerLlegadas.appendChild(inputLlegadas);
+                // Append a line break
+                containerLlegadas.appendChild(document.createElement("br"));
+            }
+            while (containerServicio.hasChildNodes()) {
+                containerServicio.removeChild(containerServicio.lastChild);
+            }
+            for (i = 0; i < number; i++) {
+                // Append a node with a random text
+                containerServicio.appendChild(document.createTextNode("Aleatorio " + (i + 1)));
+                // Create an <input> element, set its type and name attributes
+                var inputServicio = document.createElement("input");
+                inputServicio.type = "number";
+                inputServicio.step = "0.001";
+                inputServicio.className = "form-control input-lg";
+                inputServicio.name = "riServicio";
+                inputServicio.required = "true";
+                inputServicio.min = "0";
+                inputServicio.max = "1";
+                containerServicio.appendChild(inputServicio);
+                // Append a line break
+                containerServicio.appendChild(document.createElement("br"));
+            }
+        }
+
+        function mostrar(id) {
+
+
+            if (id == "Multiplicativo") {
+                var n = document.getElementById("n");
+                n.setAttribute("value", "");
+                var m = document.getElementById("m");
+                m.setAttribute("value", "");
+                var xo = document.getElementById("xo");
+                xo.setAttribute("value", "");
+                var a = document.getElementById("a");
+                a.setAttribute("value", "");
+                var c = document.getElementById("c");
+                c.setAttribute("value", "2");
+
+                $("#Manual").hide();
+                $("#divc").hide();
+                $("#Lineal").hide();
+                $("#Multiplicativo").show();
+                $("#simanual").show();
+                $("#divcb").hide();
+                $("#Linealb").hide();
+                $("#Multiplicativob").show();
+
+            }
+            if (id == "Manual") {
+                $("#Multiplicativo").hide();
+                $("#Multiplicativob").hide();
+                $("#Linealb").hide();
+
+                $("#Lineal").hide();
+                $("#Manual").show();
+                $("#simanual").hide();
+
+                var n = document.getElementById("n");
+                n.setAttribute("value", 2);
+                var m = document.getElementById("m");
+                m.setAttribute("value", "2");
+                var xo = document.getElementById("xo");
+                xo.setAttribute("value", "2");
+                var a = document.getElementById("a");
+                a.setAttribute("value", 2);
+                var c = document.getElementById("c");
+                c.setAttribute("value", "2");
+
+
+                var nb = document.getElementById("nb");
+                nb.setAttribute("value", "2");
+                var mb = document.getElementById("mb");
+                mb.setAttribute("value", "2");
+                var xob = document.getElementById("xob");
+                xob.setAttribute("value", "2");
+                var ab = document.getElementById("ab");
+                ab.setAttribute("value", "2");
+                var cb = document.getElementById("cb");
+                cb.setAttribute("value", "2");
+
+            }
+            if (id == "Lineal") {
+                var n = document.getElementById("n");
+                n.setAttribute("value", "");
+                var m = document.getElementById("m");
+                m.setAttribute("value", "");
+                var xo = document.getElementById("xo");
+                xo.setAttribute("value", "");
+                var a = document.getElementById("a");
+                a.setAttribute("value", "");
+                var c = document.getElementById("c");
+                c.setAttribute("value", "");
+
+                $("#Multiplicativo").show();
+                $("#divc").show();
+                $("#Multiplicativob").show();
+                $("#divcb").show();
+                $("#Manual").hide();
+                $("#simanual").show();
+
+
+            }
+            if (id == "") {
+                $("#Multiplicativo").hide();
+                $("#Lineal").hide();
+                $("#Manual").hide();
+                $("#Multiplicativob").hide();
+                $("#Linealb").hide();
+                $("#simanual").hide();
+            }
+
+        }
+
+        function valuechange() {
+
+            $("#n").keyup(function () {
+                var value = $(this).val();
+                $("#nb").val(value);
+                $("#NR").val(value);
+            });
+        }
+
+
+    </script>
+
+{% endblock %}

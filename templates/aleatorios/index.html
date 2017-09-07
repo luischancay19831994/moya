@@ -1,0 +1,569 @@
+{% extends 'base/base.html' %}
+
+{% block title %} Números Aleatorios {% endblock %}
+
+{% block header %}
+    <h1>Generar Números Aleatorios</h1>
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#menu1">Método Lineal</a></li>
+        <li><a href="#menu2">Método Multiplicativo</a></li>
+        <li><a href="#menu3">Método Cuadrado Medio</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="menu1" class="tab-pane fade in active">
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-group has-success has-feedback">
+                    <label class="control-label" for="inputGroupSuccess1">Ingrese datos:</label>
+                    <div class="input-group">
+
+                        <span class="input-group-addon">N</span>
+                        <input required type="number" class="form-control input-lg" id="inputGroupSuccess1"
+                               aria-describedby="inputGroupSuccess1Status" name="n" placeholder="Cantidad a Generar">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon">A</span>
+                        <input required type="number" class="form-control input-lg" id="inputGroupSuccess2"
+                               aria-describedby="inputGroupSuccess2Status" name="a"
+                               placeholder="Constante Multiplicativa">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon">Xo</span>
+                        <input required type="number" class="form-control input-lg" id="inputGroupSuccess3"
+                               aria-describedby="inputGroupSuccess3Status" name="xo" placeholder="Semilla Inicial">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">C</span>
+                        <input required type="number" class="form-control input-lg" id="inputGroupSuccess4"
+                               aria-describedby="inputGroupSuccess4Status" name="c" placeholder="Constante Aditiva">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">M</span>
+                        <input required type="number" class="form-control input-lg" id="inputGroupSuccess5"
+                               aria-describedby="inputGroupSuccess5Status" name="m" placeholder="Modulo">
+                    </div>
+
+                    <div class="input-group">
+                        <input hidden type="number" value="1" name="x" placeholder="Digite valor de X">
+
+                        <input hidden type="number" value="2" name="d" placeholder="Digite valor de D">
+
+                        <select name="metodo" hidden>
+                            <option selected value="metodo_lineal">Método Lineal</option>
+                        </select>
+                    </div>
+                </div>
+                <input id="ButtonLineal" class="btn btn-primary btn-lg btn-block" type="submit"
+                       value="Generar Metodo Lineal">
+
+            </form>
+
+        </div>
+        <div id="menu2" class="tab-pane fade">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-group has-warning has-feedback">
+                    <label class="control-label" for="inputGroupSuccess6">Ingrese datos:</label>
+                    <div class="input-group">
+
+                        <span class="input-group-addon">N</span>
+                        <input required type="number" class="form-control input-lg" id="inputGroupSuccess6"
+                               aria-describedby="inputGroupSuccess1Status" name="n" placeholder="Cantidad a Generar">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon">A</span>
+                        <input required type="number" class="form-control input-lg" id="inputGroupSuccess7"
+                               aria-describedby="inputGroupSuccess2Status" name="a"
+                               placeholder="Constante Multiplicativa">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon">Xo</span>
+                        <input required type="number" class="form-control input-lg" id="inputGroupSuccess8"
+                               aria-describedby="inputGroupSuccess3Status" name="xo" placeholder="Semilla Inicial">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon">M</span>
+                        <input required type="number" class="form-control input-lg" id="inputGroupSuccess9"
+                               aria-describedby="inputGroupSuccess5Status" name="m" placeholder="Modulo">
+                    </div>
+
+                    <div class="input-group">
+                        <input hidden type="number" value="1" name="x" placeholder="Digite valor de X">
+                        <input hidden type="number" value="31" name="c" placeholder="Digite valor de C">
+                        <input hidden type="number" value="2" name="d" placeholder="Digite valor de D">
+
+                        <select name="metodo" hidden>
+                            <option selected value="metodo_multiplicativo">Método Multiplicativo</option>
+                        </select>
+                    </div>
+                </div>
+                <input class="btn btn-warning btn-lg btn-block" type="submit" value="Generar Metodo Multiplicativo">
+
+            </form>
+
+        </div>
+        <div id="menu3" class="tab-pane fade">
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="form-group has-error has-feedback">
+                    <label class="control-label" for="inputGroupSuccess6">Ingrese datos:</label>
+                    <div class="input-group">
+
+                        <span class="input-group-addon">N</span>
+                        <input required type="number" class="form-control input-lg" id="inputGroupSuccess6"
+                               aria-describedby="inputGroupSuccess1Status" name="n" placeholder="Cantidad a Generar">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon">X</span>
+                        <input required type="number" class="form-control input-lg" id="inputGroupSuccess7"
+                               aria-describedby="inputGroupSuccess2Status" name="x" placeholder="Valor Inicial">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon">D</span>
+                        <input required type="number" class="form-control input-lg" id="inputGroupSuccess9"
+                               aria-describedby="inputGroupSuccess5Status" name="d"
+                               placeholder="Numero de digitos a sacar">
+                    </div>
+
+                    <div class="input-group">
+                        <input hidden type="number" value="1" name="a" placeholder="Digite valor de a">
+                        <input hidden type="number" value="31" name="xo" placeholder="Digite valor de xo">
+                        <input hidden type="number" value="2" name="m" placeholder="Digite valor de m">
+                        <input hidden type="number" value="31" name="c" placeholder="Digite valor de c">
+                        <select name="metodo" hidden>
+                            <option selected value="metodo_cuadradomedio">Método Cuadrado Medio</option>
+                        </select>
+                    </div>
+                </div>
+                <input class="btn btn-danger btn-lg btn-block" type="submit" value="Generar Método Cuadrado Medio">
+
+            </form>
+        </div>
+    </div>
+
+
+    <!--
+
+		<form method="post">
+			{% csrf_token %}
+			<input type="text" value="10" name="n" placeholder="Digite valor de N">
+			<input type="text" value="31" name="a" placeholder="Digite valor de A">
+			<input type="text" value="77" name="xo" placeholder="Digite valor de XO">
+			<input type="text" value="31" name="c" placeholder="Digite valor de C">
+			<input type="text" value="131" name="m" placeholder="Digite valor de M">
+			<h5>Cuadrado Medio</h5>
+            <input type="text" value="77" name="x" placeholder="Digite valor de X">
+			<input type="text" value="31" name="d" placeholder="Digite valor de D">
+
+            <select name="metodo" >
+                <option  value="metodo_lineal">Metodo Lineal</option>
+                <option value="metodo_multiplicativo">Metodo Multiplicativo</option>
+                <option value="metodo_cuadradomedio">Metodo Cuadrado Medio</option>
+            </select>
+
+            <input type="submit" value="Generar">
+		</form>
+		-->
+{% endblock %}
+
+{% block content %}
+    <h1>Resultados</h1>
+    {% if messages %}
+
+        <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            {% for message in messages %}
+                <p> {{ message }}</p>
+            {% endfor %}
+        </div>
+
+    {% endif %}
+
+    {% if chi2 > 0 %}
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3 class="panel-title">Chi Cuadrado</h3>
+            </div>
+            <div class="panel-body">
+                <h4>La prueba de chi cuadrado es = {{ chi2 }} p-value = {{ p }} df = {{ dof }}</h4>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            Tabla de Datos Método Lineal
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#ModalLineal">Ver Gráfico
+            </button>
+        </div>
+        <div class="panel-body">
+            <table class="table table-bordered table-striped table-hover" style="width:100%">
+                <tr>
+                    <th>N</th>
+                    <th>Xo</th>
+                    <th>(aXo + c) mod m</th>
+                    <th>Xn + 1</th>
+                    <th>Número Rectangular</th>
+                    <th>Random</th>
+                </tr>
+
+                {% for datos in datos %}
+                    <tr>
+
+                        <td>{{ datos.0 }} </td>
+                        <td>{{ datos.1 }}</td>
+                        <td>{{ datos.2 }} + {{ datos.3 }} / {{ datos.4 }}  </td>
+                        <td>{{ datos.5 }}</td>
+                        <td>{{ datos.6 }}</td>
+                        <td>{{ datos.7 }}</td>
+
+                    </tr>
+
+                {% endfor %}
+
+            </table>
+        </div>
+    </div>
+
+    <div class="panel panel-warning">
+        <div class="panel-heading">
+            Tabla de Datos Método Multiplicativo
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#ModalMulti">Ver Gráfico
+            </button>
+        </div>
+        <div class="panel-body">
+            <table class="table table-bordered table-striped table-hover" style="width:100%">
+                <tr>
+                    <th>N</th>
+                    <th>Xo</th>
+                    <th>(a * Xo) mod m</th>
+                    <th>Xn + 1</th>
+                    <th>Número Rectangular</th>
+                    <th>Random</th>
+                </tr>
+
+                {% for datos in datosMulti %}
+                    <tr>
+
+                        <td>{{ datos.0 }} </td>
+                        <td>{{ datos.1 }}</td>
+                        <td>{{ datos.2 }} * {{ datos.3 }} / {{ datos.4 }}  </td>
+                        <td>{{ datos.5 }}</td>
+                        <td>{{ datos.6 }}</td>
+                        <td>{{ datos.7 }}</td>
+
+                    </tr>
+
+                {% endfor %}
+
+            </table>
+        </div>
+    </div>
+
+    <div class="panel panel-danger">
+        <div class="panel-heading">
+            Tabla de Datos Método Cuadrado Medio
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#ModalCuadmed">Ver Gráfico
+            </button>
+        </div>
+        <div class="panel-body">
+            <table class="table table-bordered table-striped table-hover" style="width:100%">
+                <tr>
+                    <th>N</th>
+                    <th>Xn</th>
+                    <th>Xn^2</th>
+                    <th>Xn + 1</th>
+                    <th>Random</th>
+                </tr>
+
+                {% for datos in datosCuad %}
+                    <tr>
+
+                        <td>{{ datos.0 }} </td>
+                        <td>{{ datos.1 }}</td>
+                        <td>{{ datos.2 }} </td>
+                        <td>{{ datos.3 }} </td>
+                        <td>{{ datos.4 }}</td>
+
+                    </tr>
+
+                {% endfor %}
+
+            </table>
+        </div>
+    </div>
+
+
+
+{% endblock %}
+
+
+{% block footer %}
+
+    <div><h2>Gráfico Último Método Generado</h2>
+        <div id="ultimo" style="width:90%;height:500px;"></div>
+    </div>
+
+
+    <!-- Modal Lineal-->
+    <div class="modal fade" id="ModalLineal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Gráfico Metodo Lineal</h4>
+                </div>
+                <div class="modal-body">
+                    <h2>Gráfico</h2>
+                    <div id="lineal" style="width:500%;height:500px;"></div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal Multiplicativo-->
+    <div class="modal fade" id="ModalMulti" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Gráfico Metodo Multiplicativo</h4>
+                </div>
+                <div class="modal-body">
+                    <h2>Gráfico</h2>
+                    <div id="multiplicativo" style="width:500%;height:500px;"></div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal Cuadrado medio-->
+    <div class="modal fade" id="ModalCuadmed" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Gráfico Metodo Cuadrado Medio</h4>
+                </div>
+                <div class="modal-body">
+                    <h2>Gráfico</h2>
+                    <div id="cuadmed" style="width:500%;height:500px;"></div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".nav-tabs a").click(function () {
+                $(this).tab('show');
+            });
+        });
+    </script>
+
+
+    <script type="text/javascript">
+
+        var trace1 = {
+            x:{{ mlineal }},
+            y: {{ mlineal }},
+
+            mode: 'markers+text',
+            type: 'scatter',
+            name: 'Team A',
+            text: {{ mlineal }},
+            textposition: 'top center',
+            textfont: {
+                family: 'Raleway, sans-serif'
+            },
+            marker: {
+                size: 25, color: 'rgb(234, 153, 153)',
+            }
+        };
+
+        var data = [trace1];
+
+        var layout = {
+            xaxis: {
+                range: [0, 1]
+            },
+            yaxis: {
+                range: [0, 1]
+            },
+            legend: {
+                y: 0.5,
+                yref: 'paper',
+                font: {
+                    family: 'Arial, sans-serif',
+                    size: 20,
+                    color: 'rgb(234, 153, 153)',
+                }
+            },
+            title: 'Gráfico Metodo Lineal'
+        };
+
+        Plotly.newPlot('lineal', data, layout);
+    </script>
+
+    <script type="text/javascript">
+
+        var trace1 = {
+
+            x: {{ mmulti }},
+            y: {{ mmulti }},
+            mode: 'markers+text',
+            type: 'scatter',
+            name: 'Team A',
+            text: {{ mmulti }},
+            textposition: 'top center',
+            textfont: {
+                family: 'Raleway, sans-serif'
+            },
+            marker: {
+                size: 25, color: 'rgb(234, 153, 153)',
+            }
+        };
+
+        var data = [trace1];
+
+        var layout = {
+            xaxis: {
+                range: [0, 1]
+            },
+            yaxis: {
+                range: [0, 1]
+            },
+            legend: {
+                y: 0.5,
+                yref: 'paper',
+                font: {
+                    family: 'Arial, sans-serif',
+                    size: 20,
+                    color: 'rgb(234, 153, 153)',
+                }
+            },
+            title: 'Gráfico Método Multiplicativo'
+        };
+
+        Plotly.newPlot('multiplicativo', data, layout);
+    </script>
+    <script type="text/javascript">
+
+        var trace1 = {
+            x: {{ mcum }},
+            y: {{ mcum }},
+            mode: 'markers+text',
+            type: 'scatter',
+            name: 'Team A',
+            text: {{ mcum }},
+            textposition: 'top center',
+            textfont: {
+                family: 'Raleway, sans-serif'
+            },
+            marker: {
+                size: 25, color: 'rgb(234, 153, 153)',
+            }
+        };
+
+        var data = [trace1];
+
+        var layout = {
+            xaxis: {
+                range: [0, 999]
+            },
+            yaxis: {
+                range: [0, 999]
+            },
+            legend: {
+                y: 0.5,
+                yref: 'paper',
+                font: {
+                    family: 'Arial, sans-serif',
+                    size: 20,
+                    color: 'rgb(234, 153, 153)',
+                }
+            },
+            title: 'Gráfico Método Cuadrado Medio'
+        };
+
+        Plotly.newPlot('cuadmed', data, layout);
+    </script>
+    <script type="text/javascript">
+
+        var trace1 = {
+            x: {{ matrizNueva }},
+            y: {{ matrizNueva }},
+            mode: 'markers+text',
+            type: 'scatter',
+            name: 'Team A',
+            text: {{ matrizNueva }},
+            textposition: 'top center',
+            textfont: {
+                family: 'Raleway, sans-serif'
+            },
+            marker: {
+                size: 25, color: 'rgb(234, 153, 153)',
+            }
+        };
+
+        var data = [trace1];
+
+        var layout = {
+            xaxis: {
+                range: [0, 1]
+            },
+            yaxis: {
+                range: [0, 1]
+            },
+            legend: {
+                y: 0.5,
+                yref: 'paper',
+                font: {
+                    family: 'Arial, sans-serif',
+                    size: 20,
+                    color: 'rgb(234, 153, 153)',
+                }
+            },
+            title: 'Numeros Aleatorios'
+        };
+
+        Plotly.newPlot('ultimo', data, layout);
+    </script>
+{% endblock %}

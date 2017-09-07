@@ -1,0 +1,323 @@
+{% extends 'base/base.html' %}
+{% load staticfiles %}
+<head>
+    {% block title %} Metodo MonteCarlo {% endblock %}
+</head>
+{% block header %}
+    <h1>Generar Monte Carlo</h1>
+    <br>
+
+    <form id="formulario" method="post">
+        {% csrf_token %}
+
+        <span class="input-group-addon">Numeros de x y f</span>
+        <input required type="number" class="form-control input-lg" id="inputGroupSuccess1"
+               aria-describedby="inputGroupSuccess1Status" name="n" placeholder="¿Cuantos Datos va a ingresar?">
+
+        <select hidden name="metodo">
+            <option selected value="numeros">Numeros</option>
+        </select>
+        <input class=" action-button"
+                type="submit" value="Continuar">
+    </form>
+    </div>
+
+    {% if num >= 1 %}
+
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-group row">
+                <div class="col-xs-4">
+
+                    <span class="input-group-addon">Nombre de X</span>
+                    <input required type="text" class="form-control input-lg" id="inputGroupSuccess2"
+                           aria-describedby="inputGroupSuccess2Status" name="nx" placeholder="Nombre de X">
+                    <span class="input-group-addon">Valores de X</span>
+                    {% for num in num %}
+
+                        <input required type="text" class="form-control input-lg" id="inputGroupSuccess1"
+                               aria-describedby="inputGroupSuccess1Status" name="vx"
+                               placeholder="Valor de X {{ num }}">
+
+                    {% endfor %}
+
+                </div>
+                <div class="col-xs-4">
+
+                    <span class="input-group-addon">Nombre de Frecuencia</span>
+                    <input required type="text" class="form-control input-lg" id="inputGroupSuccess3"
+                           aria-describedby="inputGroupSuccess3Status" name="nfre"
+                           placeholder="Nombre de Frecuencia">
+                    <span class="input-group-addon">Valores de Frecuencia</span>
+                    {% for num in num %}
+
+                        <input required type="number" step="0.01" class="form-control input-lg"
+                               id="inputGroupSuccess5"
+                               aria-describedby="inputGroupSuccess5Status" name="vfre"
+                               placeholder="Valor de Frecuencia {{ num }}">
+
+                    {% endfor %}
+                </div>
+
+                <input hidden value="{{ nume }}" type="number" name="no" placeholder="{{ nume }}">
+                <div class="input-group">
+
+
+                </div>
+
+                <select hidden name="metodo">
+                    <option selected value="valor_x">Valores de xx</option>
+                </select>
+            </div>
+            <h2>Valores de Numeros aleatorios o ingrese cantidad</h2>
+            <div class="form-group has-success has-feedback">
+                <label class="control-label" for="inputGroupSuccess1">Ingrese datos:</label>
+
+                <div class="input-group">
+
+                    <span class="input-group-addon">N</span>
+                    <input required type="number" class="form-control input-lg" id="inputGroupSuccess1"
+                           aria-describedby="inputGroupSuccess1Status" name="n" placeholder="Cantidad a Generar">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon">A</span>
+                    <input required type="number" class="form-control input-lg" id="inputGroupSuccess2"
+                           aria-describedby="inputGroupSuccess2Status" name="a"
+                           placeholder="Constante Multiplicativa">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon">Xo</span>
+                    <input required type="number" class="form-control input-lg" id="inputGroupSuccess3"
+                           aria-describedby="inputGroupSuccess3Status" name="xo" placeholder="Semilla Inicial">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">C</span>
+                    <input required type="number" class="form-control input-lg" id="inputGroupSuccess4"
+                           aria-describedby="inputGroupSuccess4Status" name="c" placeholder="Constante Aditiva">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">M</span>
+                    <input required type="number" class="form-control input-lg" id="inputGroupSuccess5"
+                           aria-describedby="inputGroupSuccess5Status" name="m" placeholder="Modulo">
+                </div>
+
+                <div class="input-group">
+                    <select name="metodoa" onchange="MetodoCambio" class="form-control input-lg">
+                        <option selected value="lineal">Método Lineal</option>
+                        <option value="multiplicativo">Método Multiplicativo</option>
+                        <option value="manual">Ingresar Numeros</option>
+
+                    </select>
+                </div>
+
+                      <div class="input-group">
+                        <span class="input-group-addon">Numeros manuales</span>
+                        <input required type="number" step="0.01" class="form-control input-lg" id="inputGroupSuccess5"
+                               aria-describedby="inputGroupSuccess5Status" name="nmanual" placeholder="Modulo">
+
+                        <button onclick="myFunction()">Generar Campo</button>
+                        <div id="myDIV">
+                            Ingrese numeros aleatorios
+                        </div>
+
+                    </div>
+            </div>
+            <input id="ButtonLineal" class="btn btn-primary btn-lg btn-block" type="submit"
+                   value="guardar valores de x">
+
+        </form>
+
+        </div>
+
+        </div>
+    {% endif %}
+
+
+
+{% endblock %}
+
+{% block content %}
+    <h1>Resultados</h1>
+    {% if messages %}
+
+        <div class="alert alert-danger" role="alert">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            {% for message in messages %}
+                <p> {{ message }}</p>
+            {% endfor %}
+        </div>
+
+    {% endif %}
+
+
+
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            Tabla de Datos Monte Carlo
+        </div>
+        <div class="panel-body">
+            <table class="table table-bordered table-striped table-hover" style="width:100%">
+                <tr>
+                    <th>#</th>
+                    <th>{{ nx }}</th>
+                    <th>Frecuencia {{ nfre }}</th>
+                    <th>Probabilidad</th>
+                    <th>Frecuencia Acumulada</th>
+                </tr>
+
+                {% for datos  in datos %}
+                    <tr>
+                        <td> {{ datos.0 }} </td>
+                        <td>  {{ datos.1 }}</td>
+                        <td>  {{ datos.2 }}</td>
+                        <td><b>{{ datos.2 }} / {{ sum }} = </b>{{ datos.3 }}</td>
+                        <td>{{ datos.4 }}</td>
+                    </tr>
+
+                {% endfor %}
+                <tr>
+                    <td></td>
+                    <th>Total:</th>
+                    <td> {{ sum }}</td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+
+
+
+    <div class="panel-body">
+
+        <table class="table table-bordered table-striped table-hover" style="width:100%">
+            <tr>
+                <th>#</th>
+                <th>Desde</th>
+                <th>Hasta</th>
+                <th>{{ nx }}</th>
+            </tr>
+            <tr>
+                <td>
+
+                    <ul class="list-group">
+                        {% for datos  in mfrecd %}
+                            <button type="button" class="list-group-item list-group-item-action">
+                                {{ datos.0 }}
+                            </button>
+                        {% endfor %}
+                    </ul>
+
+                </td>
+                <td>
+
+                    <ul class="list-group">
+                        {% for datos  in mfrecd2 %}
+                            <button type="button" class="list-group-item list-group-item-action">
+                                {{ datos }}
+                            </button>
+                        {% endfor %}
+                    </ul>
+
+                </td>
+                <td>
+
+                    <ul class="list-group">
+                        {% for datos  in mfrecd %}
+                            <button type="button" class="list-group-item list-group-item-action">
+                                {{ datos.2 }}
+                            </button>
+                        {% endfor %}
+                    </ul>
+
+                </td>
+                <td>
+
+                    <ul class="list-group">
+                        {% for datos  in datos %}
+                            <button type="button" class="list-group-item list-group-item-action">
+                                {{ datos.1 }}
+                            </button>
+                        {% endfor %}
+                    </ul>
+
+                </td>
+
+
+            </tr>
+
+
+        </table>
+    </div>
+    {{ mnume }}
+    {{ matrizNueva }}
+    <div class="panel-body">
+        <table class="table table-bordered table-striped table-hover" style="width:100%">
+
+            <tr>
+                <th># Evento</th>
+                <th>Numero Aleatorio</th>
+                <th>Frecuencia Seleccionada</th>
+                <th>Resultado {{ nx }}</th>
+            </tr>
+
+            {% for datos  in mresultado %}
+                <tr>
+                    <td> {{ datos.0 }} </td>
+                    <td>  {{ datos.1 }}</td>
+                    <td>  {{ datos.2 }}</td>
+                    <td>  {{ datos.3 }}</td>
+
+                </tr>
+
+            {% endfor %}
+
+
+        </table>
+    </div>
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+
+{% block footer %}
+
+    <script type="text/javascript">
+        function myFunction() {
+
+            var x = document.createElement("INPUT");
+            x.setAttribute("type", "number");
+            x.setAttribute("step", "0.01");
+            x.setAttribute("class", "form-control input-lg");
+            x.setAttribute("name", "nmanual");
+            x.setAttribute("placeholder", "Ingrese Numero");
+            x.setAttribute("required", true);
+
+            document.getElementById("myDIV").appendChild(x);
+        }
+
+
+    </script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".nav-tabs a").click(function () {
+                $(this).tab('show');
+            });
+        });
+    </script>
+
+{% endblock %}

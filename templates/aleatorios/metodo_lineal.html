@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Numeros Aleatorios</title>
+    <!-- Plotly.js -->
+    <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+</head>
+
+<body>
+
+<h1>Generar Numeros Aleatorios</h1>
+<form method="post">
+    {% csrf_token %}
+    <input type="text" value="10" name="n" placeholder="Digite valor de N">
+    <input type="text" value="31" name="a" placeholder="Digite valor de A">
+    <input type="text" value="77" name="xo" placeholder="Digite valor de XO">
+    <input type="text" value="31" name="c" placeholder="Digite valor de C">
+    <input type="text" value="131" name="m" placeholder="Digite valor de M">
+    <h5>Cuadrado Medio</h5>
+    <input type="text" value="77" name="x" placeholder="Digite valor de X">
+    <input type="text" value="31" name="d" placeholder="Digite valor de D">
+
+    <select name="metodo">
+        <option value="metodo_lineal">Metodo Lineal</option>
+        <option value="metodo_multiplicativo">Metodo Multiplicativo</option>
+        <option value="metodo_cuadradomedio">Metodo Cuadrado Medio</option>
+    </select>
+
+    <input type="submit" value="Generar">
+</form>
+
+<h1>Resultados</h1>
+<h5>La prueba de chi cuadrado es = {{ chi2 }}, p-value = {{ p }}, df = {{ dof }}</h5>
+
+<table style="width:100%">
+    <tr>
+        <th>N</th>
+        <th>Xo</th>
+        <th>(aXo + c) mod m</th>
+        <th>Xn + 1</th>
+        <th>Numero Rectangular</th>
+        <th>Random</th>
+    </tr>
+    generado
+    {% for datos in datos %}
+        <tr>
+
+            <td>{{ datos.0 }} </td>
+            <td>{{ datos.1 }}</td>
+            <td>{{ datos.2 }} + {{ datos.3 }} / {{ datos.4 }}  </td>
+            <td>{{ datos.5 }}</td>
+            <td>{{ datos.6 }}</td>
+            <td>{{ datos.7 }}</td>
+
+        </tr>
+
+    {% endfor %}
+
+
+</table>
+
+<h2>Grafico</h2>
+<div id="myDiv" style="width:90%;height:500px;"></div>
+
+<script type="text/javascript">
+
+    var trace1 = {
+        x: {{ matrizNueva }},
+        y: {{ matrizNueva }},
+        mode: 'markers+text',
+        type: 'scatter',
+        name: 'Team A',
+        text: {{ matrizNueva }},
+        textposition: 'top center',
+        textfont: {
+            family: 'Raleway, sans-serif'
+        },
+        marker: {
+            size: 25, color: 'rgb(234, 153, 153)',
+        }
+    };
+
+    var data = [trace1];
+
+    var layout = {
+        xaxis: {
+            range: [0, 1]
+        },
+        yaxis: {
+            range: [0, 1]
+        },
+        legend: {
+            y: 0.5,
+            yref: 'paper',
+            font: {
+                family: 'Arial, sans-serif',
+                size: 20,
+                color: 'rgb(234, 153, 153)',
+            }
+        },
+        title: 'Numeros Aleatorios'
+    };
+
+    Plotly.newPlot('myDiv', data, layout);
+</script>
+</body>
+
+</html>
